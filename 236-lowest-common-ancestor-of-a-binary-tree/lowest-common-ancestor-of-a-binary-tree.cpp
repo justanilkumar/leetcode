@@ -9,19 +9,27 @@
  */
 class Solution {
 public:
+    TreeNode* ans = NULL;
+
+    int solve(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if (root == NULL) return 0;
+
+        int left = solve(root->left, p, q);
+        int right = solve(root->right, p, q);
+
+        int self = (root == p || root == q) ? 1 : 0;
+
+        int total = left + right + self;
+
+        if (total >= 2 && ans == NULL) {
+            ans = root;
+        }
+
+        return total;
+    }
+
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        
-        if(root == NULL) return NULL;
-
-        if(root == p || root == q)
-            return root;
-
-        TreeNode* left = lowestCommonAncestor(root->left, p, q);
-        TreeNode* right = lowestCommonAncestor(root->right, p, q);
-
-        if(left != NULL && right != NULL)
-            return root;
-
-        return (left != NULL) ? left : right;
+        solve(root, p, q);
+        return ans;
     }
 };
